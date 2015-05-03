@@ -1,6 +1,5 @@
 +++
 date = "2015-05-03T10:08:26-07:00"
-draft = true
 title = "Projects"
 menu = "main"
 +++
