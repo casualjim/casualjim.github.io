@@ -1,0 +1,46 @@
+baseurl = "http://casualjim.github.io/"
+languageCode = "en-us"
+title = "Exploring technology one step at a time"
+theme = "hyde-x"
+disqusShortname = "casualjimblog" # Optional, enable Disqus integration
+MetaDataFormat = "toml"
+
+[author]
+  name = "Ivan Porto Carrero"
+
+[permalinks]
+  post = "/blog/:year/:month/:day/:title/"
+
+[indexes]
+  category = "categories"
+
+[params]
+  # Used when a given page doesn't set its own.
+  defaultDescription = "Keep It Stupid Simple"
+  defaultKeywords = "technology,software,architecture,systems"
+
+  # Changes sidebar background and link/accent colours.
+  # See below for more colour options.
+  # This also works: "theme-base-08 layout-reverse", or just "layout-reverse".
+  theme = "theme-base-0d"
+
+  # Select a syntax highight.
+  # Check the static/css/highlight directory for options.
+  highlight = "sunburst"
+
+  # Displays under the author name in the sidebar, keep it short.
+  # You can use markdown here.
+  tagline = "Exploring technology one step at a time"
+
+  # Metadata used to drive integrations.
+  googleAuthorship = "106536131996809745163"
+  googleAnalytics = "UA-240612-9"
+  gravatarHash = "1e39a948a58f4569c53d971c2e120920"
+
+  # Sidebar social links, these must be full URLs.
+  github = "https://github.com/casualjim"
+  bitbucket = ""
+  linkedin = "https://www.linkedin.com/in/casualjim"
+  googleplus = "https://plus.google.com/+IvanPortoCarreroBE/"
+  facebook = "https://www.facebook.com/ivanportocarrero"
+  twitter = "https://twitter.com/casualjim"
