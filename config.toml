@@ -1,7 +1,7 @@
-baseurl = "http://casualjim.github.io/"
+baseurl = "http://casualjim.github.io"
 languageCode = "en-us"
 title = "Exploring technology one step at a time"
-theme = "hyde-x"
+theme = "lanyon"
 disqusShortname = "casualjimblog" # Optional, enable Disqus integration
 MetaDataFormat = "toml"
 
@@ -10,6 +10,7 @@ MetaDataFormat = "toml"
 
 [permalinks]
   post = "/blog/:year/:month/:day/:title/"
+  fixed = "/:title/"
 
 [indexes]
   category = "categories"
@@ -18,6 +19,9 @@ MetaDataFormat = "toml"
   # Used when a given page doesn't set its own.
   defaultDescription = "Keep It Stupid Simple"
   defaultKeywords = "technology,software,architecture,systems"
+
+
+  dateform = "Jan 2 2006"
 
   # Changes sidebar background and link/accent colours.
   # See below for more colour options.
@@ -38,9 +42,13 @@ MetaDataFormat = "toml"
   gravatarHash = "1e39a948a58f4569c53d971c2e120920"
 
   # Sidebar social links, these must be full URLs.
-  github = "https://github.com/casualjim"
+  # github = "https://github.com/casualjim"
   bitbucket = ""
   linkedin = "https://www.linkedin.com/in/casualjim"
   googleplus = "https://plus.google.com/+IvanPortoCarreroBE/"
   facebook = "https://www.facebook.com/ivanportocarrero"
   twitter = "https://twitter.com/casualjim"
+
+[params.Github]
+    url = "https://github.com/casualjim/casualjim.github.io"
+    head = "master"
