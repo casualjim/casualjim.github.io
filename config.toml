@@ -17,7 +17,8 @@ MetaDataFormat = "toml"
 
 [params]
   # Used when a given page doesn't set its own.
-  defaultDescription = "Keep It Stupid Simple"
+  title = "casualjim's blog"
+  defaultDescription = "Keeping It Stupid Simple"
   defaultKeywords = "technology,software,architecture,systems"
 
 
@@ -42,7 +43,7 @@ MetaDataFormat = "toml"
   gravatarHash = "1e39a948a58f4569c53d971c2e120920"
 
   # Sidebar social links, these must be full URLs.
-  # github = "https://github.com/casualjim"
+  github = "https://github.com/casualjim"
   bitbucket = ""
   linkedin = "https://www.linkedin.com/in/casualjim"
   googleplus = "https://plus.google.com/+IvanPortoCarreroBE/"

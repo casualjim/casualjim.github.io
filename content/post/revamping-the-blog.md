@@ -4,9 +4,7 @@ title = "revamping the blog"
 
 +++
 
-# Revamping the blog
-
-Yet another effort to revamp the blog. I'll use this to share news about go-swagger and such I think.
+Latest effort to revamp the blog. I'll use this to share news about go-swagger and such I think.
 
 I'm starting the process of rescueing whatever is possible from my previous blog at http://flanders.co.nz.
 But that will take a little while.
