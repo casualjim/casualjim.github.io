@@ -51,11 +51,11 @@
       
     
       
-        <a class="sidebar-nav-item " href="http://casualjim.github.io/about-me/">About me</a>
+        <a class="sidebar-nav-item " href="http://localhost:1313/about-me/">About me</a>
       
     
       
-        <a class="sidebar-nav-item " href="http://casualjim.github.io/projects/">Projects</a>
+        <a class="sidebar-nav-item " href="http://localhost:1313/projects/">Projects</a>
       
     
 
@@ -95,22 +95,22 @@ But that will take a little while.</p>
 
   <div id="disqus_thread"></div>
 </div>
-<p>blaha blahb </p>
-
-<script type="text/javascript">
-var disqus_shortname = "casualjimblog";
-(function () {
-    var s = document.createElement('script'); s.async = true;
-    s.type = 'text/javascript';
-    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-}());
-</script>
-
       </div>
     </div>
 
     <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    
+    <script type="text/javascript">
+    var disqus_shortname = "casualjimblog";
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>
+    
 
     
     <script>
@@ -120,6 +120,21 @@ var disqus_shortname = "casualjimblog";
       s.parentNode.insertBefore(g,s)}(document,'script'));
     </script>
     
-  </body>
+  <script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
 </html>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+    var disqus_shortname = 'casualjimblog';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
