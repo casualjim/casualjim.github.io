@@ -8,13 +8,18 @@
   </url>
   
   <url>
-    <loc>http://casualjim.github.io/projects/</loc>
+    <loc>http://casualjim.github.io/404/</loc>
     <lastmod>2015-05-03T10:08:26-07:00</lastmod>
   </url>
   
   <url>
-    <loc>http://casualjim.github.io/about/</loc>
+    <loc>http://casualjim.github.io/about-me/</loc>
     <lastmod>2015-05-03T09:40:44-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://casualjim.github.io/projects/</loc>
+    <lastmod>2015-05-03T10:08:26-07:00</lastmod>
   </url>
   
 </urlset>

@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Exploring technology one step at a time</title>
-    <link>http://casualjim.github.io/post/</link>
-    <description>Recent content in Posts on Exploring technology one step at a time</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <title>Exploring technology one step at a time </title>
+    <link>http://localhost:1313/post/</link>
     <language>en-us</language>
-    <lastBuildDate>Sun, 03 May 2015 09:44:19 -0700</lastBuildDate>
-    <atom:link href="http://casualjim.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <author></author>
+    <rights>(C) 2015</rights>
+    <updated>2015-05-04 11:39:26 -0700 PDT</updated>
+
     
-    <item>
-      <title>Maingear Ultrabook</title>
-      <link>http://casualjim.github.io/blog/2015/05/03/maingear-ultrabook/</link>
-      <pubDate>Sun, 03 May 2015 09:44:19 -0700</pubDate>
       
-      <guid>http://casualjim.github.io/blog/2015/05/03/maingear-ultrabook/</guid>
-      <description></description>
-    </item>
+        <item>
+          <title>linux developer ultrabook</title>
+          <link>http://localhost:1313/blog/2015/05/04/linux-developer-ultrabook/</link>
+          <pubDate>Mon, 04 May 2015 11:39:26 PDT</pubDate>
+          <author></author>
+          <guid>http://localhost:1313/blog/2015/05/04/linux-developer-ultrabook/</guid>
+          <description>&lt;p&gt;For a while now I&amp;rsquo;ve wanted to move from my macbook to a linux ultrabook. And I finally decided to do something about it.
+So I set out to find laptops that would give me the same things I like about my macbook but without OSX. In this adventure I end up trying 3 different machines.&lt;/p&gt;
+
+&lt;p&gt;I looked at all the options and there are many but very few of them seemed to come close to what the macbook pro could do.
+With linux you have to be a bit more careful when you pick hardware.&lt;/p&gt;
+
+&lt;p&gt;So in the end I ended up in the section of gaming laptops and decided on the Maingear Pulse 15&amp;rdquo;.
+It&amp;rsquo;s a beautiful laptop, I got to pick the case color but ordered during the harsh winter weather which caused delays in my delivery. In the end I received my laptop about 3 weeks after the original shipping date estimate. I almost cancelled my order but am really glad I didn&amp;rsquo;t.&lt;/p&gt;
+
+&lt;p&gt;The machine comes with 2 SSD&amp;rsquo;s in fake raid amounting up to 512GB that I&amp;rsquo;m using as my root volume. It has a 1TB spinning disk that comes with it. This is the disk I use to run dockers and VM&amp;rsquo;s of.&lt;/p&gt;
+
+&lt;p&gt;My macbook pro is 2 years old so I knew this machine should be faster when I try compiling things. So I took one of our largest projects and started a clean compile cycle. I repeated that 10 times, on my macbook this would average between 2m and 2m30s. On the maingear this is about 30s.&lt;/p&gt;
+</description>
+        </item>
+      
     
+
   </channel>
 </rss>
