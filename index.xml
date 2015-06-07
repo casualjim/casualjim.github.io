@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Exploring technology one step at a time </title>
-    <link>http://localhost:1313/</link>
+    <link>http://casualjim.github.io/</link>
     <language>en-us</language>
     <author></author>
     <rights>(C) 2015</rights>
@@ -12,10 +12,10 @@
       
         <item>
           <title>revamping the blog</title>
-          <link>http://localhost:1313/blog/2015/06/07/revamping-the-blog/</link>
+          <link>http://casualjim.github.io/blog/2015/06/07/revamping-the-blog/</link>
           <pubDate>Sun, 07 Jun 2015 15:58:27 PDT</pubDate>
           <author></author>
-          <guid>http://localhost:1313/blog/2015/06/07/revamping-the-blog/</guid>
+          <guid>http://casualjim.github.io/blog/2015/06/07/revamping-the-blog/</guid>
           <description>&lt;p&gt;Latest effort to revamp the blog. I&amp;rsquo;ll use this to share news about go-swagger and such I think.&lt;/p&gt;
 
 &lt;p&gt;I&amp;rsquo;m starting the process of rescueing whatever is possible from my previous blog at &lt;a href=&#34;http://flanders.co.nz&#34;&gt;http://flanders.co.nz&lt;/a&gt;.
