@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Exploring technology one step at a time </title>
-    <link>http://localhost:1313/</link>
+    <link>http://casualjim.github.io/</link>
     <language>en-us</language>
     <author></author>
     <rights>(C) 2015</rights>
@@ -12,10 +12,10 @@
       
         <item>
           <title>revamping the blog</title>
-          <link>http://localhost:1313/blog/2015/06/07/revamping-the-blog/</link>
+          <link>http://casualjim.github.io/blog/2015/06/07/revamping-the-blog/</link>
           <pubDate>Sun, 07 Jun 2015 15:58:27 PDT</pubDate>
           <author></author>
-          <guid>http://localhost:1313/blog/2015/06/07/revamping-the-blog/</guid>
+          <guid>http://casualjim.github.io/blog/2015/06/07/revamping-the-blog/</guid>
           <description>&lt;p&gt;Latest effort to revamp the blog. I&amp;rsquo;ll use this to share news about go-swagger and such I think.&lt;/p&gt;
 
 &lt;p&gt;I&amp;rsquo;m starting the process of rescueing whatever is possible from my previous blog at &lt;a href=&#34;http://flanders.co.nz&#34;&gt;http://flanders.co.nz&lt;/a&gt;.
@@ -31,10 +31,10 @@ But that will take a little while.&lt;/p&gt;
       
         <item>
           <title>Scalatra 2.2 released</title>
-          <link>http://localhost:1313/blog/2013/02/13/scalatra-2.2-released/</link>
+          <link>http://casualjim.github.io/blog/2013/02/13/scalatra-2.2-released/</link>
           <pubDate>Wed, 13 Feb 2013 11:30:15 UTC</pubDate>
           <author></author>
-          <guid>http://localhost:1313/blog/2013/02/13/scalatra-2.2-released/</guid>
+          <guid>http://casualjim.github.io/blog/2013/02/13/scalatra-2.2-released/</guid>
           <description>
 
 &lt;p&gt;Last week we released Scalatra 2.2. This is our biggest release so far and introduces a bunch of exciting features like commands for handling input, atmosphere for websockets and comet. It has a much deeper swagger integration now and that API has been completely upgraded.
@@ -203,10 +203,10 @@ get(&amp;quot;/findByStatus&amp;quot;, operation(findByStatus)) {
       
         <item>
           <title>Json4s: One AST to rule them all.</title>
-          <link>http://localhost:1313/blog/2012/10/25/json4s-one-ast-to-rule-them-all./</link>
+          <link>http://casualjim.github.io/blog/2012/10/25/json4s-one-ast-to-rule-them-all./</link>
           <pubDate>Thu, 25 Oct 2012 08:48:23 UTC</pubDate>
           <author></author>
-          <guid>http://localhost:1313/blog/2012/10/25/json4s-one-ast-to-rule-them-all./</guid>
+          <guid>http://casualjim.github.io/blog/2012/10/25/json4s-one-ast-to-rule-them-all./</guid>
           <description>&lt;p&gt;It seems to me that every webframework in Scala, of which we have plenty, also insists on writing their own JSON library.
 But various tools rely on the AST from lift-json.  This is both good and bad, there were a number of gaps in the lift-json version.
 The most notable being that it does not support any other type than Double for representing decimal numbers.
@@ -238,10 +238,10 @@ I spoke with &lt;a href=&#34;https://github.com/jonifreeman&#34;&gt;Joni Freeman
       
         <item>
           <title>Typeclass based databinding for scalatra</title>
-          <link>http://localhost:1313/blog/2012/09/08/typeclass-based-databinding-for-scalatra/</link>
+          <link>http://casualjim.github.io/blog/2012/09/08/typeclass-based-databinding-for-scalatra/</link>
           <pubDate>Sat, 08 Sep 2012 09:14:43 UTC</pubDate>
           <author></author>
-          <guid>http://localhost:1313/blog/2012/09/08/typeclass-based-databinding-for-scalatra/</guid>
+          <guid>http://casualjim.github.io/blog/2012/09/08/typeclass-based-databinding-for-scalatra/</guid>
           <description>
 
 &lt;h2 id=&#34;typeclass-based-databinding-for-scalatra:4539167a8dda5ed46083cd1c7756f269&#34;&gt;Typeclass based databinding for scalatra&lt;/h2&gt;
@@ -297,10 +297,10 @@ class LoginApp extends ScalatraServlet with JacksonJsonSupport with JacksonParsi
       
         <item>
           <title>searchable sbt wiki</title>
-          <link>http://localhost:1313/blog/2012/04/24/searchable-sbt-wiki/</link>
+          <link>http://casualjim.github.io/blog/2012/04/24/searchable-sbt-wiki/</link>
           <pubDate>Tue, 24 Apr 2012 23:46:04 UTC</pubDate>
           <author></author>
-          <guid>http://localhost:1313/blog/2012/04/24/searchable-sbt-wiki/</guid>
+          <guid>http://casualjim.github.io/blog/2012/04/24/searchable-sbt-wiki/</guid>
           <description>
 
 &lt;h2 id=&#34;searchable-sbt-wiki-published:d6df3fe7278b1edf8c7720c78de18bfe&#34;&gt;Searchable sbt wiki published&lt;/h2&gt;
@@ -320,10 +320,10 @@ However the &lt;a href=&#34;https://github.com/github/gollum&#34;&gt;gollum&lt;/
       
         <item>
           <title>Radical language and platform shift</title>
-          <link>http://localhost:1313/blog/2010/09/30/radical-language-and-platform-shift/</link>
+          <link>http://casualjim.github.io/blog/2010/09/30/radical-language-and-platform-shift/</link>
           <pubDate>Thu, 30 Sep 2010 02:42:12 UTC</pubDate>
           <author></author>
-          <guid>http://localhost:1313/blog/2010/09/30/radical-language-and-platform-shift/</guid>
+          <guid>http://casualjim.github.io/blog/2010/09/30/radical-language-and-platform-shift/</guid>
           <description>&lt;p&gt;I realize it&amp;rsquo;s been a really long time since I put something on this blog. And for those of you expecting more (iron)ruby posts I&amp;rsquo;m going to have to dissapoint you. This is mostly a braindump of what I&amp;rsquo;ve been working out the last months.&lt;/p&gt;
 
 &lt;p&gt;A few months ago Adam Burmister, who I met at  &lt;a href=&#34;http://www.xero.com&#34;&gt;Xero&lt;/a&gt;, and I got incubated by &lt;a href=&#34;http://o2.co.uk&#34;&gt;O2&lt;/a&gt; to do a project that allowed me to push the boundaries and it required me to look outside what I already knew.  I had to go look for a new way of approaching problems, it isn&amp;rsquo;t said that the problems couldn&amp;rsquo;t be solved with a language like C# or Ruby. The solution would have been pretty much sub-par. In this quest for the best way to approach that problem it turned out that &lt;a href=&#34;http://scala-lang.org&#34;&gt;Scala&lt;/a&gt; was the language that hit a sweet spot for me.&lt;/p&gt;

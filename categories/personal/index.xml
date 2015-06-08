@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Exploring technology one step at a time </title>
-    <link>http://localhost:1313/categories/personal/</link>
+    <link>http://casualjim.github.io/categories/personal/</link>
     <language>en-us</language>
     <author></author>
     <rights>(C) 2015</rights>
@@ -12,10 +12,10 @@
       
         <item>
           <title>Radical language and platform shift</title>
-          <link>http://localhost:1313/blog/2010/09/30/radical-language-and-platform-shift/</link>
+          <link>http://casualjim.github.io/blog/2010/09/30/radical-language-and-platform-shift/</link>
           <pubDate>Thu, 30 Sep 2010 02:42:12 UTC</pubDate>
           <author></author>
-          <guid>http://localhost:1313/blog/2010/09/30/radical-language-and-platform-shift/</guid>
+          <guid>http://casualjim.github.io/blog/2010/09/30/radical-language-and-platform-shift/</guid>
           <description>&lt;p&gt;I realize it&amp;rsquo;s been a really long time since I put something on this blog. And for those of you expecting more (iron)ruby posts I&amp;rsquo;m going to have to dissapoint you. This is mostly a braindump of what I&amp;rsquo;ve been working out the last months.&lt;/p&gt;
 
 &lt;p&gt;A few months ago Adam Burmister, who I met at  &lt;a href=&#34;http://www.xero.com&#34;&gt;Xero&lt;/a&gt;, and I got incubated by &lt;a href=&#34;http://o2.co.uk&#34;&gt;O2&lt;/a&gt; to do a project that allowed me to push the boundaries and it required me to look outside what I already knew.  I had to go look for a new way of approaching problems, it isn&amp;rsquo;t said that the problems couldn&amp;rsquo;t be solved with a language like C# or Ruby. The solution would have been pretty much sub-par. In this quest for the best way to approach that problem it turned out that &lt;a href=&#34;http://scala-lang.org&#34;&gt;Scala&lt;/a&gt; was the language that hit a sweet spot for me.&lt;/p&gt;
