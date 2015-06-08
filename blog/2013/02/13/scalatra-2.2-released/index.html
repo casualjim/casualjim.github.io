@@ -10,7 +10,7 @@
 
   <title>
     
-      casualjim&#39;s blog &middot; Exploring technology one step at a time
+      Scalatra 2.2 released &middot; casualjim&#39;s blog
     
   </title>
 
@@ -41,7 +41,7 @@
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item  active " href="/">Home</a>
+    <a class="sidebar-nav-item " href="/">Home</a>
     <a class="sidebar-nav-item " href="/post/">Posts</a>
 
     
@@ -93,31 +93,10 @@
       <div class="container content">
 
 
-
-
-<div class="posts">
+<div class="post">
+  <h1 class="post-title">Scalatra 2.2 released</h1>
+  <span class="post-date">Feb 13 2013</span>
   
-    
-      <div class="post">
-        <h1 class="post-title"><a href="http://localhost:1313/blog/2015/06/07/revamping-the-blog/">revamping the blog</a></h1>
-        <span class="post-date">Jun 7 2015</span>
-        <p>Latest effort to revamp the blog. I&rsquo;ll use this to share news about go-swagger and such I think.</p>
-
-<p>I&rsquo;m starting the process of rescueing whatever is possible from my previous blog at <a href="http://flanders.co.nz">http://flanders.co.nz</a>.
-But that will take a little while.</p>
-
-<p>Just wanted to see if I could publish to this site really.</p>
-
-      </div>
-    
-  
-    
-  
-    
-      <div class="post">
-        <h1 class="post-title"><a href="http://localhost:1313/blog/2013/02/13/scalatra-2.2-released/">Scalatra 2.2 released</a></h1>
-        <span class="post-date">Feb 13 2013</span>
-        
 
 <p>Last week we released Scalatra 2.2. This is our biggest release so far and introduces a bunch of exciting features like commands for handling input, atmosphere for websockets and comet. It has a much deeper swagger integration now and that API has been completely upgraded.
 In short this scalatra version fixes most of the big problems we were aware off. Probably one of the nastiest of those problems was the fact that we were using thread-locals to store the request and response, when you then use a future or something the request is no longer available. Let&rsquo;s walk through some of these changes.</p>
@@ -279,109 +258,8 @@ get(&quot;/findByStatus&quot;, operation(findByStatus)) {
 
 <p>Let me know what you think.</p>
 
-      </div>
-    
-  
-    
-      <div class="post">
-        <h1 class="post-title"><a href="http://localhost:1313/blog/2012/10/25/json4s-one-ast-to-rule-them-all./">Json4s: One AST to rule them all.</a></h1>
-        <span class="post-date">Oct 25 2012</span>
-        <p>It seems to me that every webframework in Scala, of which we have plenty, also insists on writing their own JSON library.
-But various tools rely on the AST from lift-json.  This is both good and bad, there were a number of gaps in the lift-json version.
-The most notable being that it does not support any other type than Double for representing decimal numbers.
-A second problem is that because of the large number of dependencies in the lift project it typically is a bottleneck for upgrading to scala-2.10.
-And thirdly it just seems an odd place for a nice library like that to live.
-I&rsquo;m hopeful that more libraries like Play, Spray etc will contribute to this project so that instead of a fragmented json landscape we get a homogeneous one. All of them have a json ast with the same types defined in it.</p>
-
-<p>So I&rsquo;ve set out to set lift-json free from the lift project and tried to add some improvements along the way.
-The first improvement I&rsquo;ve made is that you now have the choice between using <code>BigDecimal</code> or <code>Double</code> for representing decimal numbers, so you can use the library also to represent invoices etc.
-The second change I made is to add several backends for parsing. The original lift-json parser is still available in the native package but you can now also use jackson as a parsing backend to the json library.
-It&rsquo;s really easy to add more backends so smarterjson, spray-json etc are all in the cards.</p>
-
-<p>I took a look at what play2 has in their json support and it looks like their main thing is a type class based reader/writer story instead of the formats based one from lift-json, so for good measure I also added that system to this library. In general I like typeclasses for this type of stuff but in this case I actually think that lift-json has a nicer approach by assembling all the context into a single formats object instead of requiring many type classes to be in scope at any given time when you want to parse or write json.</p>
-
-<p>There are a few more convenience methods added on the <code>JValue</code> type that allow you to <code>camelize</code> or <code>underscore</code> keys, remove the nulls etc.
-I spoke with <a href="https://github.com/jonifreeman">Joni Freeman</a> about the general idea of this library and he showed me what he did on a branch for lift-json 3.0 so I incorporated his work into json4s too. it basically means that a key/value pair used to represent a <code>JObject</code> is no longer a valid json AST node and there are some extra methods to work with those fields. All of this is explained in the <a href="https://github.com/json4s/json4s/blob/master/README.md">README</a> of the json4s project.</p>
-
-<p>I&rsquo;ve also added support for json4s to the <a href="https://github.com/dispatch/reboot">dispatch reboot</a> project so you can use it there just like you can with lift-json. Furthermore <a href="https://github.com/rktoomey">Rose Toomey</a> let me know that <a href="https://github.com/novus/salat">salat</a> is now using json4s as json library instead of lift-json.</p>
-
-<p>Some of the improvements I still want to make is for scala 2.10 I want to use the <code>Mirror</code> api to be able to reflect over more stuff than just case classes. For some of the use cases we have at where I work it makes sense to be able to use a few annotations (yes annotations unfortunately) to have certain keys be ignored and so on.  I&rsquo;ll probably steal some of that from the Salat project so that there is still some degree of consistency between our libraries.</p>
-
-<p>I also want to figure out how we can possibly make the AST based approach useful with huge data structures, as it&rsquo;s not inconceivable to want to send 100MB or 10GB json docs over the wire. At that moment a lazy approach actually makes a lot of sense, I&rsquo;m open to suggestions on how this could be achieved efficiently without breaking the AST model.</p>
-
-<p>So if you&rsquo;re using json in scala consider using or contributing to the <a href="https://github.com/json4s/json4s">json4s project</a>.</p>
-
-      </div>
-    
-  
-    
-      <div class="post">
-        <h1 class="post-title"><a href="http://localhost:1313/blog/2012/09/08/typeclass-based-databinding-for-scalatra/">Typeclass based databinding for scalatra</a></h1>
-        <span class="post-date">Sep 8 2012</span>
-        
-
-<h2 id="typeclass-based-databinding-for-scalatra:4539167a8dda5ed46083cd1c7756f269">Typeclass based databinding for scalatra</h2>
-
-<p>One of the big new features for scalatra in the next release will be databinding. We chose to use a command approach which includes validation.
-It is built on top of <a href="https://github.com/scalaz/scalaz">scalaz 6.0.4</a> at the moment, as soon as scalaz7 is released we&rsquo;ll probably migrate to that.</p>
-
-<p>One of the tenets of scalatra is that it&rsquo;s a mutable interface, the request and response of servlets are both mutable classes and we depend on those. I also wanted for the commands to be defined with vals that you can address later.
-The core functionality of the bindings is actually immutable but to the consumer of the library it pretends to be a mutable interface. Perhaps those properties will make people frown, perhaps not.</p>
-
-<h3 id="what-does-it-do:4539167a8dda5ed46083cd1c7756f269">What does it do?</h3>
-
-<p>It provides a way to represent input forms with validation attached to the fields, maybe a code sample will be a better explanation.</p>
-
-<pre><code class="language-scala">import org.json4s._
-import org.json4s.jackson._
-import org.scalatra.databinding._
-
-class LoginForm extends JacksonCommand {
-  val login: Field[String] = asString(&quot;login&quot;).notBlank
-  val password: Field[String] = asString(&quot;password&quot;).notBlank
-}
-</code></pre>
-
-<p>This interface relies on a bunch of implicit conversions to be in scope. To be able to present this mutable interface it is needed to use the <code>Field[T]</code> label after the val declaration otherwise things won&rsquo;t work as you&rsquo;d expect them to work.</p>
-
-<p>Then in the scalatra application you can do</p>
-
-<pre><code class="language-scala">import scalaz._
-import Scalaz._
-
-class LoginApp extends ScalatraServlet with JacksonJsonSupport with JacksonParsing {
-  post(&quot;/login&quot;) {
-    val cmd = command[LoginCommand]
-    if (cmd.isValid) {
-      users.login(~cmd.login.value, ~cmd.password.value)
-    } else {
-      halt(401, &quot;invalid username/password&quot;)
-    }
-  }
-}
-</code></pre>
-
-<p>This will work with data provided as form params in a http post, as json or as xml. Of course the example above is a simple one and there are many other propeties you can interrogate. At this moment the databinding is a bit light on documentation as in there is none. If you&rsquo;d like to take it for a spin feel free to ping us in the #scalatra irc room.</p>
-
-<h3 id="what-s-next:4539167a8dda5ed46083cd1c7756f269">What&rsquo;s next?</h3>
-
-<p>At some point in the future I&rsquo;d like turn a command into a monoid so that we have a map method on it, but for now I need to move onto another part of scalatra.</p>
-
-      </div>
-    
-  
+  <div id="disqus_thread"></div>
 </div>
-
-<div class="pagination">
-  
-    <span class="pagination-item older">Older</span>
-  
-
-  
-    <span class="pagination-item newer">Newer</span>
-  
-</div>
-
       </div>
     </div>
 
@@ -412,4 +290,16 @@ class LoginApp extends ScalatraServlet with JacksonJsonSupport with JacksonParsi
 		+ ':1313/livereload.js?mindelay=10"></'
         + 'script>')</script></body>
 </html>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+    var disqus_shortname = 'casualjimblog';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 

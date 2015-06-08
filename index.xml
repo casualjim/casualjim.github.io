@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Exploring technology one step at a time </title>
-    <link>http://casualjim.github.io/</link>
+    <link>http://localhost:1313/</link>
     <language>en-us</language>
     <author></author>
     <rights>(C) 2015</rights>
@@ -12,10 +12,10 @@
       
         <item>
           <title>revamping the blog</title>
-          <link>http://casualjim.github.io/blog/2015/06/07/revamping-the-blog/</link>
+          <link>http://localhost:1313/blog/2015/06/07/revamping-the-blog/</link>
           <pubDate>Sun, 07 Jun 2015 15:58:27 PDT</pubDate>
           <author></author>
-          <guid>http://casualjim.github.io/blog/2015/06/07/revamping-the-blog/</guid>
+          <guid>http://localhost:1313/blog/2015/06/07/revamping-the-blog/</guid>
           <description>&lt;p&gt;Latest effort to revamp the blog. I&amp;rsquo;ll use this to share news about go-swagger and such I think.&lt;/p&gt;
 
 &lt;p&gt;I&amp;rsquo;m starting the process of rescueing whatever is possible from my previous blog at &lt;a href=&#34;http://flanders.co.nz&#34;&gt;http://flanders.co.nz&lt;/a&gt;.
@@ -26,6 +26,341 @@ But that will take a little while.&lt;/p&gt;
         </item>
       
     
+      
+    
+      
+        <item>
+          <title>Scalatra 2.2 released</title>
+          <link>http://localhost:1313/blog/2013/02/13/scalatra-2.2-released/</link>
+          <pubDate>Wed, 13 Feb 2013 11:30:15 UTC</pubDate>
+          <author></author>
+          <guid>http://localhost:1313/blog/2013/02/13/scalatra-2.2-released/</guid>
+          <description>
+
+&lt;p&gt;Last week we released Scalatra 2.2. This is our biggest release so far and introduces a bunch of exciting features like commands for handling input, atmosphere for websockets and comet. It has a much deeper swagger integration now and that API has been completely upgraded.
+In short this scalatra version fixes most of the big problems we were aware off. Probably one of the nastiest of those problems was the fact that we were using thread-locals to store the request and response, when you then use a future or something the request is no longer available. Let&amp;rsquo;s walk through some of these changes.&lt;/p&gt;
+
+&lt;h4 id=&#34;working-around-thread-locals:fc59cf9b1cfd61441df31bf6b97e69d3&#34;&gt;Working around thread-locals.&lt;/h4&gt;
+
+&lt;p&gt;In a previous version we had migrated all our internal state to either the servlet context attributes or the request attributes, depending on their scope. In this release we made everything that accesses the request or response take them as implicit parameters. For people overriding our methods this is a breaking change, but easily fixed by adding the parameters to your method override. We also added an AsyncResult construct whose only purpose is to help you not close over thread-locals.&lt;/p&gt;
+
+&lt;p&gt;So what is exactly the problem?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;
+def skip = params.getAsOrElse(&amp;quot;skip&amp;quot;, 0)
+
+get(&amp;quot;/things/:id&amp;quot;) {
+  Future {
+    params(&amp;quot;id&amp;quot;)  // throws NPE because request is not available when the future executes
+  }
+}
+
+post(&amp;quot;/things&amp;quot;) {
+  myThingsActor ? Post(parsedBody.extract[Things]) map { things =&amp;gt;
+    if (things.isEmpty) status = 404 // throws NPE because response is not available when the future executes
+    ()
+  }
+}
+
+// assuming scentry is mixed in and user is something stored on the request or in cookies or something
+get(&amp;quot;/stuff/:id&amp;quot;) {
+  val stuff: Future[Stuff] = getStuff(params(&amp;quot;id&amp;quot;))
+  // everything is still fine
+  stuff map { allTheThings =&amp;gt;
+    getTrinketsForUser(allTheThings, user, skip)  // throws NPE because request is not available when the future executes
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And since this is something we absolutely had to fix, we had to introduce some breaking changes but they really were for the better.
+Currently there are 2 ways to get around it: bring request/response into your action in implicit vals or use the AsyncResult trait to do this for you.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s rewrite the broken examples in terms of the first work around:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;
+def skip(implicit request: HttpServletRequest) = params.getAsOrElse(&amp;quot;skip&amp;quot;, 0)
+
+get(&amp;quot;/things/:id&amp;quot;) {
+  implicit val request = this.request
+  Future {
+    params(&amp;quot;id&amp;quot;)  // no more NPE
+  }
+}
+
+post(&amp;quot;/things&amp;quot;) {
+  implicit val response = this.response
+  myThingsActor ? Post(parsedBody.extract[Things]) map { things =&amp;gt;
+    if (things.isEmpty) status = 404 // no more NPE
+    ()
+  }
+}
+
+// assuming scentry is mixed in and user is something stored on the request or in cookies or something
+get(&amp;quot;/stuff/:id&amp;quot;) {
+  implicit val request = this.request
+  implicit val response = this.response
+  val stuff: Future[Stuff] = getStuff(params(&amp;quot;id&amp;quot;))
+
+  stuff map { allTheThings =&amp;gt;
+    getTrinketsForUser(allTheThings, user, skip)  // no more NPE
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With the AsyncResult you get another chance to add some default context to your async operations but other than that it works very similar.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;
+def skip(implicit request: HttpServletRequest) = params.getAsOrElse(&amp;quot;skip&amp;quot;, 0)
+
+get(&amp;quot;/things/:id&amp;quot;) {
+  new AsyncResult { val is =
+    Future {
+      params(&amp;quot;id&amp;quot;)  // no more NPE
+    }
+  }
+}
+
+post(&amp;quot;/things&amp;quot;) {
+  new AsyncResult { val is =
+    myThingsActor ? Post(parsedBody.extract[Things]) map { things =&amp;gt;
+      if (things.isEmpty) status = 404 // no more NPE
+      ()
+    }
+  }
+}
+
+// assuming scentry is mixed in and user is something stored on the request or in cookies or something
+get(&amp;quot;/stuff/:id&amp;quot;) {
+  new AsyncResult { val is = {
+    val stuff: Future[Stuff] = getStuff(params(&amp;quot;id&amp;quot;))
+
+    stuff map { allTheThings =&amp;gt;
+      getTrinketsForUser(allTheThings, user, skip)  // no more NPE
+    }
+  } }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The AsyncResult has an implicit parameter of &lt;code&gt;ScalatraContext&lt;/code&gt; and every &lt;code&gt;ScalatraBase&lt;/code&gt; has an implicit conversion to a &lt;code&gt;ScalatraContext&lt;/code&gt; so the request and response are now stable values and no longer stuck in thread-locals.
+With that bug out of the way, and you&amp;rsquo;re a swagger user then the next examples are for you.&lt;/p&gt;
+
+&lt;h4 id=&#34;new-swagger-api:fc59cf9b1cfd61441df31bf6b97e69d3&#34;&gt;New swagger API&lt;/h4&gt;
+
+&lt;p&gt;In the previous version of scalatra we introduced swagger support. While the API we introduced then worked it ended up being very messy and was error prone since most of it used strings. At wordnik we started using scalatra and one of my co-workers, who just started learning scalatra, remarked: Swagger makes Scalatra ugly. Clearly something had to be done about this!
+This release tries to fix some of that by using as much information from the context as it possibly can and defining a fluent api for describing swagger operations.&lt;/p&gt;
+
+&lt;p&gt;There are no more strings except for things that are notes, descriptions, names etc. It integrates with scalatra&amp;rsquo;s commands so you only define the parameters for a request once. It automatically registers models when you provide them and it converts the scalatra route matcher to a swagger path string. Let&amp;rsquo;s take a look at a before and after:&lt;/p&gt;
+
+&lt;p&gt;This is how it used to be:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;// declare the models, and the models it uses
+// case class Pet(id: Long, category: Category, name: String, urls: List[String], tags: List[Tag], status: String)
+models = Map(&amp;quot;Pet&amp;quot; -&amp;gt; classOf[Pet], &amp;quot;Category&amp;quot; -&amp;gt; classOf[Category], &amp;quot;Tag&amp;quot; -&amp;gt; classOf[Tag])
+
+// declare the route with the swagger annotations
+get(&amp;quot;/findByStatus&amp;quot;,
+  summary(&amp;quot;Finds Pets by status&amp;quot;),
+  nickname(&amp;quot;findPetsByStatus&amp;quot;),
+  responseClass(&amp;quot;List[Pet]&amp;quot;),
+  endpoint(&amp;quot;findByStatus&amp;quot;),
+  notes(&amp;quot;Multiple status values can be provided with comma separated strings&amp;quot;),
+  parameters(
+    Parameter(&amp;quot;status&amp;quot;,
+      &amp;quot;Status values that need to be considered for filter&amp;quot;,
+      DataType.String,
+      paramType = ParamType.Query,
+      defaultValue = Some(&amp;quot;available&amp;quot;),
+      allowableValues = AllowableValues(&amp;quot;available&amp;quot;, &amp;quot;pending&amp;quot;, &amp;quot;sold&amp;quot;)))) {
+  data.findPetsByStatus(params(&amp;quot;status&amp;quot;))  // this is our actual implementaton, you might have missed it.
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is what it is now:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;// declare the swagger operation description
+val findByStatus =
+  (apiOperation[List[Pet]](&amp;quot;findPetsByStatus&amp;quot;)
+    summary &amp;quot;Finds Pets by status&amp;quot;
+    notes &amp;quot;Multiple status values can be provided with comma separated strings&amp;quot;
+    parameter (queryParam[String](&amp;quot;status&amp;quot;).required  // required is the default value so not strictly necessary
+                description &amp;quot;Status values that need to be considered for filter&amp;quot;
+                defaultValue &amp;quot;available&amp;quot;
+                allowableValues (&amp;quot;available&amp;quot;, &amp;quot;pending&amp;quot;, &amp;quot;sold&amp;quot;)))
+
+// declare the route with the swagger annotation
+get(&amp;quot;/findByStatus&amp;quot;, operation(findByStatus)) {
+  data.findPetsByStatus(params(&amp;quot;status&amp;quot;))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So there is no more endpoint declaration necessary, you work with actual types and you don&amp;rsquo;t have to remember to register models and all their referenced models anymore. In my opinion if you simply write the swagger declaration close to where your route lives you still have the docs live with the code but it won&amp;rsquo;t obscure the application code anymore.&lt;/p&gt;
+
+&lt;p&gt;Let me know what you think.&lt;/p&gt;
+</description>
+        </item>
+      
+    
+      
+        <item>
+          <title>Json4s: One AST to rule them all.</title>
+          <link>http://localhost:1313/blog/2012/10/25/json4s-one-ast-to-rule-them-all./</link>
+          <pubDate>Thu, 25 Oct 2012 08:48:23 UTC</pubDate>
+          <author></author>
+          <guid>http://localhost:1313/blog/2012/10/25/json4s-one-ast-to-rule-them-all./</guid>
+          <description>&lt;p&gt;It seems to me that every webframework in Scala, of which we have plenty, also insists on writing their own JSON library.
+But various tools rely on the AST from lift-json.  This is both good and bad, there were a number of gaps in the lift-json version.
+The most notable being that it does not support any other type than Double for representing decimal numbers.
+A second problem is that because of the large number of dependencies in the lift project it typically is a bottleneck for upgrading to scala-2.10.
+And thirdly it just seems an odd place for a nice library like that to live.
+I&amp;rsquo;m hopeful that more libraries like Play, Spray etc will contribute to this project so that instead of a fragmented json landscape we get a homogeneous one. All of them have a json ast with the same types defined in it.&lt;/p&gt;
+
+&lt;p&gt;So I&amp;rsquo;ve set out to set lift-json free from the lift project and tried to add some improvements along the way.
+The first improvement I&amp;rsquo;ve made is that you now have the choice between using &lt;code&gt;BigDecimal&lt;/code&gt; or &lt;code&gt;Double&lt;/code&gt; for representing decimal numbers, so you can use the library also to represent invoices etc.
+The second change I made is to add several backends for parsing. The original lift-json parser is still available in the native package but you can now also use jackson as a parsing backend to the json library.
+It&amp;rsquo;s really easy to add more backends so smarterjson, spray-json etc are all in the cards.&lt;/p&gt;
+
+&lt;p&gt;I took a look at what play2 has in their json support and it looks like their main thing is a type class based reader/writer story instead of the formats based one from lift-json, so for good measure I also added that system to this library. In general I like typeclasses for this type of stuff but in this case I actually think that lift-json has a nicer approach by assembling all the context into a single formats object instead of requiring many type classes to be in scope at any given time when you want to parse or write json.&lt;/p&gt;
+
+&lt;p&gt;There are a few more convenience methods added on the &lt;code&gt;JValue&lt;/code&gt; type that allow you to &lt;code&gt;camelize&lt;/code&gt; or &lt;code&gt;underscore&lt;/code&gt; keys, remove the nulls etc.
+I spoke with &lt;a href=&#34;https://github.com/jonifreeman&#34;&gt;Joni Freeman&lt;/a&gt; about the general idea of this library and he showed me what he did on a branch for lift-json 3.0 so I incorporated his work into json4s too. it basically means that a key/value pair used to represent a &lt;code&gt;JObject&lt;/code&gt; is no longer a valid json AST node and there are some extra methods to work with those fields. All of this is explained in the &lt;a href=&#34;https://github.com/json4s/json4s/blob/master/README.md&#34;&gt;README&lt;/a&gt; of the json4s project.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve also added support for json4s to the &lt;a href=&#34;https://github.com/dispatch/reboot&#34;&gt;dispatch reboot&lt;/a&gt; project so you can use it there just like you can with lift-json. Furthermore &lt;a href=&#34;https://github.com/rktoomey&#34;&gt;Rose Toomey&lt;/a&gt; let me know that &lt;a href=&#34;https://github.com/novus/salat&#34;&gt;salat&lt;/a&gt; is now using json4s as json library instead of lift-json.&lt;/p&gt;
+
+&lt;p&gt;Some of the improvements I still want to make is for scala 2.10 I want to use the &lt;code&gt;Mirror&lt;/code&gt; api to be able to reflect over more stuff than just case classes. For some of the use cases we have at where I work it makes sense to be able to use a few annotations (yes annotations unfortunately) to have certain keys be ignored and so on.  I&amp;rsquo;ll probably steal some of that from the Salat project so that there is still some degree of consistency between our libraries.&lt;/p&gt;
+
+&lt;p&gt;I also want to figure out how we can possibly make the AST based approach useful with huge data structures, as it&amp;rsquo;s not inconceivable to want to send 100MB or 10GB json docs over the wire. At that moment a lazy approach actually makes a lot of sense, I&amp;rsquo;m open to suggestions on how this could be achieved efficiently without breaking the AST model.&lt;/p&gt;
+
+&lt;p&gt;So if you&amp;rsquo;re using json in scala consider using or contributing to the &lt;a href=&#34;https://github.com/json4s/json4s&#34;&gt;json4s project&lt;/a&gt;.&lt;/p&gt;
+</description>
+        </item>
+      
+    
+      
+        <item>
+          <title>Typeclass based databinding for scalatra</title>
+          <link>http://localhost:1313/blog/2012/09/08/typeclass-based-databinding-for-scalatra/</link>
+          <pubDate>Sat, 08 Sep 2012 09:14:43 UTC</pubDate>
+          <author></author>
+          <guid>http://localhost:1313/blog/2012/09/08/typeclass-based-databinding-for-scalatra/</guid>
+          <description>
+
+&lt;h2 id=&#34;typeclass-based-databinding-for-scalatra:4539167a8dda5ed46083cd1c7756f269&#34;&gt;Typeclass based databinding for scalatra&lt;/h2&gt;
+
+&lt;p&gt;One of the big new features for scalatra in the next release will be databinding. We chose to use a command approach which includes validation.
+It is built on top of &lt;a href=&#34;https://github.com/scalaz/scalaz&#34;&gt;scalaz 6.0.4&lt;/a&gt; at the moment, as soon as scalaz7 is released we&amp;rsquo;ll probably migrate to that.&lt;/p&gt;
+
+&lt;p&gt;One of the tenets of scalatra is that it&amp;rsquo;s a mutable interface, the request and response of servlets are both mutable classes and we depend on those. I also wanted for the commands to be defined with vals that you can address later.
+The core functionality of the bindings is actually immutable but to the consumer of the library it pretends to be a mutable interface. Perhaps those properties will make people frown, perhaps not.&lt;/p&gt;
+
+&lt;h3 id=&#34;what-does-it-do:4539167a8dda5ed46083cd1c7756f269&#34;&gt;What does it do?&lt;/h3&gt;
+
+&lt;p&gt;It provides a way to represent input forms with validation attached to the fields, maybe a code sample will be a better explanation.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import org.json4s._
+import org.json4s.jackson._
+import org.scalatra.databinding._
+
+class LoginForm extends JacksonCommand {
+  val login: Field[String] = asString(&amp;quot;login&amp;quot;).notBlank
+  val password: Field[String] = asString(&amp;quot;password&amp;quot;).notBlank
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This interface relies on a bunch of implicit conversions to be in scope. To be able to present this mutable interface it is needed to use the &lt;code&gt;Field[T]&lt;/code&gt; label after the val declaration otherwise things won&amp;rsquo;t work as you&amp;rsquo;d expect them to work.&lt;/p&gt;
+
+&lt;p&gt;Then in the scalatra application you can do&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import scalaz._
+import Scalaz._
+
+class LoginApp extends ScalatraServlet with JacksonJsonSupport with JacksonParsing {
+  post(&amp;quot;/login&amp;quot;) {
+    val cmd = command[LoginCommand]
+    if (cmd.isValid) {
+      users.login(~cmd.login.value, ~cmd.password.value)
+    } else {
+      halt(401, &amp;quot;invalid username/password&amp;quot;)
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will work with data provided as form params in a http post, as json or as xml. Of course the example above is a simple one and there are many other propeties you can interrogate. At this moment the databinding is a bit light on documentation as in there is none. If you&amp;rsquo;d like to take it for a spin feel free to ping us in the #scalatra irc room.&lt;/p&gt;
+
+&lt;h3 id=&#34;what-s-next:4539167a8dda5ed46083cd1c7756f269&#34;&gt;What&amp;rsquo;s next?&lt;/h3&gt;
+
+&lt;p&gt;At some point in the future I&amp;rsquo;d like turn a command into a monoid so that we have a map method on it, but for now I need to move onto another part of scalatra.&lt;/p&gt;
+</description>
+        </item>
+      
+    
+      
+        <item>
+          <title>searchable sbt wiki</title>
+          <link>http://localhost:1313/blog/2012/04/24/searchable-sbt-wiki/</link>
+          <pubDate>Tue, 24 Apr 2012 23:46:04 UTC</pubDate>
+          <author></author>
+          <guid>http://localhost:1313/blog/2012/04/24/searchable-sbt-wiki/</guid>
+          <description>
+
+&lt;h2 id=&#34;searchable-sbt-wiki-published:d6df3fe7278b1edf8c7720c78de18bfe&#34;&gt;Searchable sbt wiki published&lt;/h2&gt;
+
+&lt;p&gt;Last week I went to &lt;a href=&#34;http://days2012.scala-lang.org/&#34;&gt;Scala Days&lt;/a&gt; and had a blast. I got to meet many of the people whose software I use every day.&lt;br /&gt;
+Most Scala developers I know of use sbt to build scala projects.
+SBT has a great &lt;a href=&#34;https://github.com/harrah/xsbt/wiki&#34;&gt;wiki&lt;/a&gt; with loads of information but is hosted on github and they, unfortunately, have no search box on their wikis that will search just the wiki.  This leads to long searches on the sbt wiki or grepping the checked out git repo or worse.
+However the &lt;a href=&#34;https://github.com/github/gollum&#34;&gt;gollum&lt;/a&gt; software which runs the github wikis does have a search box, so I decided to host the sbt wiki as a read-only version somewhere else.&lt;/p&gt;
+
+&lt;p&gt;The same server that hosts our jenkins frontend is now also hosting the &lt;a href=&#34;https://sbtwiki.backchat.io&#34;&gt;sbt wiki&lt;/a&gt; and the main feature is &lt;em&gt;a search box&lt;/em&gt;. It&amp;rsquo;s running a unicorn server for rack fronted by nginx for ssl termination.&lt;/p&gt;
+
+&lt;p&gt;Enjoy the new &lt;a href=&#34;https://sbtwiki.backchat.io&#34;&gt;sbt wiki&lt;/a&gt;.&lt;/p&gt;
+</description>
+        </item>
+      
+    
+      
+        <item>
+          <title>Radical language and platform shift</title>
+          <link>http://localhost:1313/blog/2010/09/30/radical-language-and-platform-shift/</link>
+          <pubDate>Thu, 30 Sep 2010 02:42:12 UTC</pubDate>
+          <author></author>
+          <guid>http://localhost:1313/blog/2010/09/30/radical-language-and-platform-shift/</guid>
+          <description>&lt;p&gt;I realize it&amp;rsquo;s been a really long time since I put something on this blog. And for those of you expecting more (iron)ruby posts I&amp;rsquo;m going to have to dissapoint you. This is mostly a braindump of what I&amp;rsquo;ve been working out the last months.&lt;/p&gt;
+
+&lt;p&gt;A few months ago Adam Burmister, who I met at  &lt;a href=&#34;http://www.xero.com&#34;&gt;Xero&lt;/a&gt;, and I got incubated by &lt;a href=&#34;http://o2.co.uk&#34;&gt;O2&lt;/a&gt; to do a project that allowed me to push the boundaries and it required me to look outside what I already knew.  I had to go look for a new way of approaching problems, it isn&amp;rsquo;t said that the problems couldn&amp;rsquo;t be solved with a language like C# or Ruby. The solution would have been pretty much sub-par. In this quest for the best way to approach that problem it turned out that &lt;a href=&#34;http://scala-lang.org&#34;&gt;Scala&lt;/a&gt; was the language that hit a sweet spot for me.&lt;/p&gt;
+
+&lt;p&gt;We needed something that resembled Erlang; and while I did my best to really get into &lt;a href=&#34;http://www.erlang.org/&#34;&gt;Erlang&lt;/a&gt; I never could (this could possibly be because of the eye bleeds because the language is just so friggin&amp;rsquo; ugly). So it turns out there is a design pattern called &lt;a href=&#34;http://en.wikipedia.org/wiki/Active_object&#34;&gt;ActiveObject&lt;/a&gt; which is at the core the same as an erlang node (it&amp;rsquo;s not I know a node has many other properties).   We also needed to be able to process humongous volumes of data (Terrabytes worth) at this point Ruby is out of the picture. I&amp;rsquo;m sure I will upset many fanboys but face it ruby is slooooooooooooooow and advances slow, by the time you can properly program distributed systems in ruby the way I had in mind I&amp;rsquo;ll be a great grand dad and have a long and pointy grey beard. .Net is lacking libraries and the ruby libraries often are good enough, but &lt;a href=&#34;http://www.startuplessonslearned.com/2010/09/good-enough-never-is-or-is-it.html&#34;&gt;good enough never is&lt;/a&gt;. And since I got tired of patching every single bloody library I touched I vowed to steer clear of ruby. We still use ruby but we use it for what it&amp;rsquo;s great at: system automation scripts and sometimes quick prototyping.&lt;/p&gt;
+
+&lt;p&gt;We basically needed hadoop, hadoop is a java project (I&amp;rsquo;ll return to why not java and C# a little bit later). So once I entered the Java domain a new world opened up for me (old for most other people I realise that). Java has what can only be described as a SHITLOAD of great quality libraries. It&amp;rsquo;s just a pithy that Java like C# suffers from what I call programmer masturbation. I&amp;rsquo;ve certainly been guilty of that and during my time at Xero they suffered the grunt of it (sorry guys). So lets return to those problems.&lt;/p&gt;
+
+&lt;p&gt;You read a book, nicknamed Gang of Four which then becomes &amp;ldquo;the bible&amp;rdquo;, it has this thing called design patterns and they need to be applied where ever you can.  I&amp;rsquo;ll let you in on a little secret: They do next to nothing to make your code more maintainable (quite the opposite in fact) and definitely don&amp;rsquo;t make it more understandable unless the next guy also knows &amp;ldquo;the bible&amp;rdquo;. If he doesn&amp;rsquo;t he&amp;rsquo;s a fucking retard, everybody knows those design patterns.  The thing that doesn&amp;rsquo;t jive is: how is writing more code making your code more maintainable as you have to maintain more code (did I mention more code in this sentence?)The one thing ubiquitous use of design patterns from &amp;ldquo;the bible&amp;rdquo; does do is give you some job security. Pythonista&amp;rsquo;s &lt;a href=&#34;http://us.pycon.org/2009/conference/schedule/event/51/&#34;&gt;shun design patterns&lt;/a&gt; and if not you should apparently.  Having programmed in many languages I tend to agree with the conclusion that having to use crutches like design patterns (I should really make this into a factory or manager of some sort) actually means your language is flawed.&lt;/p&gt;
+
+&lt;p&gt;I still need to meet the person that can actually prove to me that your code is more maintainable than code that follows the following simple rules:
+* Don&amp;rsquo;t Repeat Yourself
+* Don&amp;rsquo;t write what you don&amp;rsquo;t need right now
+* write a couple of tests
+*  Generalize as if there was no tomorrow.
+* Write as little and as simple code as humanly possible (this kills double dispatch and the visitor pattern)
+* Remember that you (as do I) have a bird brain, you will have forgotten what you did 2 weeks ago, let alone 6 months from now, so it needs to be understandable by the biggest idiot on the planet, namely the author of the code (in my case me).&lt;/p&gt;
+
+&lt;p&gt;I don&amp;rsquo;t want to write a post on why I left .NET but it&amp;rsquo;s inevitable to mention it. I used to think .NET was the greatest thing since sliced bread and I still think it&amp;rsquo;s a really cool piece of technology. However there is only a small minority of .NET programmers I actually get along with so some of the remarks I&amp;rsquo;m going to make are not directed at those people. I have felt unhappy about the way .NET was evolving around the same time microsoft introduced the class designer tool. Don&amp;rsquo;t even get me started on people advocating UML because that belongs in the same classification, a vertical one. Once Oslo got introduced or is it M I wanted to get out as quickly as possible. I happen to like writing code, if I wanted to drag and drop boxes and connect them with fancy lines I would have gone for a designer career.&lt;/p&gt;
+
+&lt;p&gt;.NET also suffers from another problem, whatever the all-knowing company produces is innovation created by them (never mind if some of those things have been around for more than 20 years). And most developers on .NET suffer from that phenomenon that can only be called Stockholm Syndrome. It is mind boggling to me that you want to use tools you know suck, they don&amp;rsquo;t make you do a better job faster in fact once you move past the hello world example they fall apart really quickly, not to mention having to debug a problem and submitting a bug (which will then be bounced back as by design).&lt;/p&gt;
+
+&lt;p&gt;Enough slamming on .NET let&amp;rsquo;s return to Java. Stephen Colebourne goes the next &lt;a href=&#34;http://www.jroller.com/scolebourne/entry/the_next_big_jvm_language1&#34;&gt;big JVM language is Java&lt;/a&gt;, but this time done right??? One of his arguments is 10.000.000 programmers world wide can&amp;rsquo;t be wrong. I happen to think that 9,9 million of those programmers mostly likes to get paid, it has little or nothing to do with the fact that it&amp;rsquo;s a great or not great language.  It&amp;rsquo;s certainly easier than C and definitely C++, ask &lt;a href=&#34;http://artlung.com/smorgasborg/Invention_of_Cplusplus.shtml&#34;&gt;Bjarne&lt;/a&gt;. Most of the java code I read makes me sick to my stomach the boilerplate needed   (the next example is in C# the java one would most def be longer:  &lt;a href=&#34;http://code.google.com/p/fizzbuzz/source/browse/#svn/trunk/trunk&#34;&gt;fizzbuzz enterprise edition&lt;/a&gt;) is atrocious. Java date arithmetic (I know about joda-time) is an absolute nightmare. The fact that you need to write at least 6 (not counting import statements and the main definition) lines of code to be able to read input from the keyboard and  print it out just amplify my point.&lt;/p&gt;
+
+&lt;p&gt;So no ruby, no .NET no java what&amp;rsquo;s next. There is this cool thing people keep talking about: node.js it&amp;rsquo;s crazy fast (if you compare it with languages like ruby and run the correct hello world benchmarks). however the libraries are subpar at best and generally feel like they&amp;rsquo;ve been written by very young programmers (with the odd exception of course) who have little or no clue about what&amp;rsquo;s going on outside of their blog or what their &amp;ldquo;gods&amp;rdquo; are saying. I&amp;rsquo;m sure it has a place and I&amp;rsquo;ve given it more than an honest chance but at the end of the day it would have required a big investment to write all kinds of things that just aren&amp;rsquo;t there (yet).&lt;/p&gt;
+
+&lt;p&gt;But you know it&amp;rsquo;s event driven and asynchronous and that&amp;rsquo;s why it&amp;rsquo;s fast and only non-blocking IO is the right way to go because using blocking IO is slow. Ok now you got me, you&amp;rsquo;re right but also wrong. It depends on your use case and how you work with blocking IO. We&amp;rsquo;ve come to go by this simple rule: if you need many short-lived connections (like in say HTTP) then non blocking io is indeed better, however long lasting connections may benefit from blocking IO, because the throughput is a lot higher (although it&amp;rsquo;s not quite as black and white as that).&lt;/p&gt;
+
+&lt;p&gt;So back to we want erlang but without the bleeding eyes: enter scala + &lt;a href=&#34;http://www.akkasource.org&#34;&gt;akka&lt;/a&gt;. Boy was I happy camper when I started reading their docs. An open-source project, written in this language called scala that solves the same problems as Erlang only this language is beautiful, yes I&amp;rsquo;ll repeat that beauuuutifuuuulll. Scala gives me what ruby was never able to give me, a fast, pretty language that supports multiple paradigms with a strong nudge towards functional programming. it can be run on .NET as well as on the JVM meaning we didn&amp;rsquo;t have to forego the much needed libraries. And the libraries that are available are in a totally different league than those dinky toys node.js and ruby have to offer. It&amp;rsquo;s like comparing the majors to the minors I guess.&lt;/p&gt;
+
+&lt;p&gt;The downside is that we do need core i7 machines to get any decent compile times out of the thing and IDE support (while it gets better steadily) is still behind on other languages. If you&amp;rsquo;re wondering about LOC count vs ruby I think they&amp;rsquo;re about even once you know what you&amp;rsquo;re doing. Scala is not an easy language but it&amp;rsquo;s heaps of fun to work with and I&amp;rsquo;m glad I get to use it the next couple of years.  if you&amp;rsquo;re looking for an acceptable alternative on .NET that is supported by the all-knowing hugely innovative company you should look at F#.&lt;/p&gt;
+
+&lt;p&gt;As an aside the next time somebody mentions enterprise ready as baked in to me; they will get a rope, chair and nail it&amp;rsquo;s quicker and less painful.&lt;/p&gt;
+
+&lt;p&gt;There the rant is over, I feel a lot better now. I already know I&amp;rsquo;m an idiot so tell me something new.&lt;/p&gt;
+</description>
+        </item>
       
     
       
