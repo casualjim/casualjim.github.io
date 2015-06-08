@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Radical language and platform shift &middot; casualjim&#39;s blog
+    
+  </title>
+
+  
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>Ivan Porto Carrero<br />Keeping It Stupid Simple</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item " href="/">Home</a>
+    <a class="sidebar-nav-item " href="/post/">Posts</a>
+
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a class="sidebar-nav-item " href="http://localhost:1313/about-me/">About me</a>
+      
+    
+      
+        <a class="sidebar-nav-item " href="http://localhost:1313/projects/">Projects</a>
+      
+    
+
+    <a class="sidebar-nav-item" href="https://github.com/casualjim/casualjim.github.io">GitHub project</a>
+    <span class="sidebar-nav-item">Currently on master</span>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home"></a>
+            <small></small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+
+
+<div class="post">
+  <h1 class="post-title">Radical language and platform shift</h1>
+  <span class="post-date">Sep 30 2010</span>
+  <p>I realize it&rsquo;s been a really long time since I put something on this blog. And for those of you expecting more (iron)ruby posts I&rsquo;m going to have to dissapoint you. This is mostly a braindump of what I&rsquo;ve been working out the last months.</p>
+
+<p>A few months ago Adam Burmister, who I met at  <a href="http://www.xero.com">Xero</a>, and I got incubated by <a href="http://o2.co.uk">O2</a> to do a project that allowed me to push the boundaries and it required me to look outside what I already knew.  I had to go look for a new way of approaching problems, it isn&rsquo;t said that the problems couldn&rsquo;t be solved with a language like C# or Ruby. The solution would have been pretty much sub-par. In this quest for the best way to approach that problem it turned out that <a href="http://scala-lang.org">Scala</a> was the language that hit a sweet spot for me.</p>
+
+<p>We needed something that resembled Erlang; and while I did my best to really get into <a href="http://www.erlang.org/">Erlang</a> I never could (this could possibly be because of the eye bleeds because the language is just so friggin&rsquo; ugly). So it turns out there is a design pattern called <a href="http://en.wikipedia.org/wiki/Active_object">ActiveObject</a> which is at the core the same as an erlang node (it&rsquo;s not I know a node has many other properties).   We also needed to be able to process humongous volumes of data (Terrabytes worth) at this point Ruby is out of the picture. I&rsquo;m sure I will upset many fanboys but face it ruby is slooooooooooooooow and advances slow, by the time you can properly program distributed systems in ruby the way I had in mind I&rsquo;ll be a great grand dad and have a long and pointy grey beard. .Net is lacking libraries and the ruby libraries often are good enough, but <a href="http://www.startuplessonslearned.com/2010/09/good-enough-never-is-or-is-it.html">good enough never is</a>. And since I got tired of patching every single bloody library I touched I vowed to steer clear of ruby. We still use ruby but we use it for what it&rsquo;s great at: system automation scripts and sometimes quick prototyping.</p>
+
+<p>We basically needed hadoop, hadoop is a java project (I&rsquo;ll return to why not java and C# a little bit later). So once I entered the Java domain a new world opened up for me (old for most other people I realise that). Java has what can only be described as a SHITLOAD of great quality libraries. It&rsquo;s just a pithy that Java like C# suffers from what I call programmer masturbation. I&rsquo;ve certainly been guilty of that and during my time at Xero they suffered the grunt of it (sorry guys). So lets return to those problems.</p>
+
+<p>You read a book, nicknamed Gang of Four which then becomes &ldquo;the bible&rdquo;, it has this thing called design patterns and they need to be applied where ever you can.  I&rsquo;ll let you in on a little secret: They do next to nothing to make your code more maintainable (quite the opposite in fact) and definitely don&rsquo;t make it more understandable unless the next guy also knows &ldquo;the bible&rdquo;. If he doesn&rsquo;t he&rsquo;s a fucking retard, everybody knows those design patterns.  The thing that doesn&rsquo;t jive is: how is writing more code making your code more maintainable as you have to maintain more code (did I mention more code in this sentence?)The one thing ubiquitous use of design patterns from &ldquo;the bible&rdquo; does do is give you some job security. Pythonista&rsquo;s <a href="http://us.pycon.org/2009/conference/schedule/event/51/">shun design patterns</a> and if not you should apparently.  Having programmed in many languages I tend to agree with the conclusion that having to use crutches like design patterns (I should really make this into a factory or manager of some sort) actually means your language is flawed.</p>
+
+<p>I still need to meet the person that can actually prove to me that your code is more maintainable than code that follows the following simple rules:
+* Don&rsquo;t Repeat Yourself
+* Don&rsquo;t write what you don&rsquo;t need right now
+* write a couple of tests
+*  Generalize as if there was no tomorrow.
+* Write as little and as simple code as humanly possible (this kills double dispatch and the visitor pattern)
+* Remember that you (as do I) have a bird brain, you will have forgotten what you did 2 weeks ago, let alone 6 months from now, so it needs to be understandable by the biggest idiot on the planet, namely the author of the code (in my case me).</p>
+
+<p>I don&rsquo;t want to write a post on why I left .NET but it&rsquo;s inevitable to mention it. I used to think .NET was the greatest thing since sliced bread and I still think it&rsquo;s a really cool piece of technology. However there is only a small minority of .NET programmers I actually get along with so some of the remarks I&rsquo;m going to make are not directed at those people. I have felt unhappy about the way .NET was evolving around the same time microsoft introduced the class designer tool. Don&rsquo;t even get me started on people advocating UML because that belongs in the same classification, a vertical one. Once Oslo got introduced or is it M I wanted to get out as quickly as possible. I happen to like writing code, if I wanted to drag and drop boxes and connect them with fancy lines I would have gone for a designer career.</p>
+
+<p>.NET also suffers from another problem, whatever the all-knowing company produces is innovation created by them (never mind if some of those things have been around for more than 20 years). And most developers on .NET suffer from that phenomenon that can only be called Stockholm Syndrome. It is mind boggling to me that you want to use tools you know suck, they don&rsquo;t make you do a better job faster in fact once you move past the hello world example they fall apart really quickly, not to mention having to debug a problem and submitting a bug (which will then be bounced back as by design).</p>
+
+<p>Enough slamming on .NET let&rsquo;s return to Java. Stephen Colebourne goes the next <a href="http://www.jroller.com/scolebourne/entry/the_next_big_jvm_language1">big JVM language is Java</a>, but this time done right??? One of his arguments is 10.000.000 programmers world wide can&rsquo;t be wrong. I happen to think that 9,9 million of those programmers mostly likes to get paid, it has little or nothing to do with the fact that it&rsquo;s a great or not great language.  It&rsquo;s certainly easier than C and definitely C++, ask <a href="http://artlung.com/smorgasborg/Invention_of_Cplusplus.shtml">Bjarne</a>. Most of the java code I read makes me sick to my stomach the boilerplate needed   (the next example is in C# the java one would most def be longer:  <a href="http://code.google.com/p/fizzbuzz/source/browse/#svn/trunk/trunk">fizzbuzz enterprise edition</a>) is atrocious. Java date arithmetic (I know about joda-time) is an absolute nightmare. The fact that you need to write at least 6 (not counting import statements and the main definition) lines of code to be able to read input from the keyboard and  print it out just amplify my point.</p>
+
+<p>So no ruby, no .NET no java what&rsquo;s next. There is this cool thing people keep talking about: node.js it&rsquo;s crazy fast (if you compare it with languages like ruby and run the correct hello world benchmarks). however the libraries are subpar at best and generally feel like they&rsquo;ve been written by very young programmers (with the odd exception of course) who have little or no clue about what&rsquo;s going on outside of their blog or what their &ldquo;gods&rdquo; are saying. I&rsquo;m sure it has a place and I&rsquo;ve given it more than an honest chance but at the end of the day it would have required a big investment to write all kinds of things that just aren&rsquo;t there (yet).</p>
+
+<p>But you know it&rsquo;s event driven and asynchronous and that&rsquo;s why it&rsquo;s fast and only non-blocking IO is the right way to go because using blocking IO is slow. Ok now you got me, you&rsquo;re right but also wrong. It depends on your use case and how you work with blocking IO. We&rsquo;ve come to go by this simple rule: if you need many short-lived connections (like in say HTTP) then non blocking io is indeed better, however long lasting connections may benefit from blocking IO, because the throughput is a lot higher (although it&rsquo;s not quite as black and white as that).</p>
+
+<p>So back to we want erlang but without the bleeding eyes: enter scala + <a href="http://www.akkasource.org">akka</a>. Boy was I happy camper when I started reading their docs. An open-source project, written in this language called scala that solves the same problems as Erlang only this language is beautiful, yes I&rsquo;ll repeat that beauuuutifuuuulll. Scala gives me what ruby was never able to give me, a fast, pretty language that supports multiple paradigms with a strong nudge towards functional programming. it can be run on .NET as well as on the JVM meaning we didn&rsquo;t have to forego the much needed libraries. And the libraries that are available are in a totally different league than those dinky toys node.js and ruby have to offer. It&rsquo;s like comparing the majors to the minors I guess.</p>
+
+<p>The downside is that we do need core i7 machines to get any decent compile times out of the thing and IDE support (while it gets better steadily) is still behind on other languages. If you&rsquo;re wondering about LOC count vs ruby I think they&rsquo;re about even once you know what you&rsquo;re doing. Scala is not an easy language but it&rsquo;s heaps of fun to work with and I&rsquo;m glad I get to use it the next couple of years.  if you&rsquo;re looking for an acceptable alternative on .NET that is supported by the all-knowing hugely innovative company you should look at F#.</p>
+
+<p>As an aside the next time somebody mentions enterprise ready as baked in to me; they will get a rope, chair and nail it&rsquo;s quicker and less painful.</p>
+
+<p>There the rant is over, I feel a lot better now. I already know I&rsquo;m an idiot so tell me something new.</p>
+
+  <div id="disqus_thread"></div>
+</div>
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    
+    <script type="text/javascript">
+    var disqus_shortname = "casualjimblog";
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>
+    
+
+    
+    <script>
+      var _gaq=[['_setAccount','UA-240612-9'],['_trackPageview']];
+      (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+      g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g,s)}(document,'script'));
+    </script>
+    
+  <script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
+</html>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+    var disqus_shortname = 'casualjimblog';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+

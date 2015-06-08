@@ -10,7 +10,7 @@
 
   <title>
     
-      revamping the blog &middot; casualjim&#39;s blog
+      Typeclass based databinding for scalatra &middot; casualjim&#39;s blog
     
   </title>
 
@@ -94,14 +94,56 @@
 
 
 <div class="post">
-  <h1 class="post-title">revamping the blog</h1>
-  <span class="post-date">Jun 7 2015</span>
-  <p>Latest effort to revamp the blog. I&rsquo;ll use this to share news about go-swagger and such I think.</p>
+  <h1 class="post-title">Typeclass based databinding for scalatra</h1>
+  <span class="post-date">Sep 8 2012</span>
+  
 
-<p>I&rsquo;m starting the process of rescueing whatever is possible from my previous blog at <a href="http://flanders.co.nz">http://flanders.co.nz</a>.
-But that will take a little while.</p>
+<h2 id="typeclass-based-databinding-for-scalatra:4539167a8dda5ed46083cd1c7756f269">Typeclass based databinding for scalatra</h2>
 
-<p>Just wanted to see if I could publish to this site really.</p>
+<p>One of the big new features for scalatra in the next release will be databinding. We chose to use a command approach which includes validation.
+It is built on top of <a href="https://github.com/scalaz/scalaz">scalaz 6.0.4</a> at the moment, as soon as scalaz7 is released we&rsquo;ll probably migrate to that.</p>
+
+<p>One of the tenets of scalatra is that it&rsquo;s a mutable interface, the request and response of servlets are both mutable classes and we depend on those. I also wanted for the commands to be defined with vals that you can address later.
+The core functionality of the bindings is actually immutable but to the consumer of the library it pretends to be a mutable interface. Perhaps those properties will make people frown, perhaps not.</p>
+
+<h3 id="what-does-it-do:4539167a8dda5ed46083cd1c7756f269">What does it do?</h3>
+
+<p>It provides a way to represent input forms with validation attached to the fields, maybe a code sample will be a better explanation.</p>
+
+<pre><code class="language-scala">import org.json4s._
+import org.json4s.jackson._
+import org.scalatra.databinding._
+
+class LoginForm extends JacksonCommand {
+  val login: Field[String] = asString(&quot;login&quot;).notBlank
+  val password: Field[String] = asString(&quot;password&quot;).notBlank
+}
+</code></pre>
+
+<p>This interface relies on a bunch of implicit conversions to be in scope. To be able to present this mutable interface it is needed to use the <code>Field[T]</code> label after the val declaration otherwise things won&rsquo;t work as you&rsquo;d expect them to work.</p>
+
+<p>Then in the scalatra application you can do</p>
+
+<pre><code class="language-scala">import scalaz._
+import Scalaz._
+
+class LoginApp extends ScalatraServlet with JacksonJsonSupport with JacksonParsing {
+  post(&quot;/login&quot;) {
+    val cmd = command[LoginCommand]
+    if (cmd.isValid) {
+      users.login(~cmd.login.value, ~cmd.password.value)
+    } else {
+      halt(401, &quot;invalid username/password&quot;)
+    }
+  }
+}
+</code></pre>
+
+<p>This will work with data provided as form params in a http post, as json or as xml. Of course the example above is a simple one and there are many other propeties you can interrogate. At this moment the databinding is a bit light on documentation as in there is none. If you&rsquo;d like to take it for a spin feel free to ping us in the #scalatra irc room.</p>
+
+<h3 id="what-s-next:4539167a8dda5ed46083cd1c7756f269">What&rsquo;s next?</h3>
+
+<p>At some point in the future I&rsquo;d like turn a command into a monoid so that we have a map method on it, but for now I need to move onto another part of scalatra.</p>
 
   <div id="disqus_thread"></div>
 </div>

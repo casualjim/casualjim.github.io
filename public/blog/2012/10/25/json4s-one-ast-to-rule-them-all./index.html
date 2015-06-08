@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Json4s: One AST to rule them all. &middot; casualjim&#39;s blog
+    
+  </title>
+
+  
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>Ivan Porto Carrero<br />Keeping It Stupid Simple</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item " href="/">Home</a>
+    <a class="sidebar-nav-item " href="/post/">Posts</a>
+
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a class="sidebar-nav-item " href="http://localhost:1313/about-me/">About me</a>
+      
+    
+      
+        <a class="sidebar-nav-item " href="http://localhost:1313/projects/">Projects</a>
+      
+    
+
+    <a class="sidebar-nav-item" href="https://github.com/casualjim/casualjim.github.io">GitHub project</a>
+    <span class="sidebar-nav-item">Currently on master</span>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home"></a>
+            <small></small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+
+
+<div class="post">
+  <h1 class="post-title">Json4s: One AST to rule them all.</h1>
+  <span class="post-date">Oct 25 2012</span>
+  <p>It seems to me that every webframework in Scala, of which we have plenty, also insists on writing their own JSON library.
+But various tools rely on the AST from lift-json.  This is both good and bad, there were a number of gaps in the lift-json version.
+The most notable being that it does not support any other type than Double for representing decimal numbers.
+A second problem is that because of the large number of dependencies in the lift project it typically is a bottleneck for upgrading to scala-2.10.
+And thirdly it just seems an odd place for a nice library like that to live.
+I&rsquo;m hopeful that more libraries like Play, Spray etc will contribute to this project so that instead of a fragmented json landscape we get a homogeneous one. All of them have a json ast with the same types defined in it.</p>
+
+<p>So I&rsquo;ve set out to set lift-json free from the lift project and tried to add some improvements along the way.
+The first improvement I&rsquo;ve made is that you now have the choice between using <code>BigDecimal</code> or <code>Double</code> for representing decimal numbers, so you can use the library also to represent invoices etc.
+The second change I made is to add several backends for parsing. The original lift-json parser is still available in the native package but you can now also use jackson as a parsing backend to the json library.
+It&rsquo;s really easy to add more backends so smarterjson, spray-json etc are all in the cards.</p>
+
+<p>I took a look at what play2 has in their json support and it looks like their main thing is a type class based reader/writer story instead of the formats based one from lift-json, so for good measure I also added that system to this library. In general I like typeclasses for this type of stuff but in this case I actually think that lift-json has a nicer approach by assembling all the context into a single formats object instead of requiring many type classes to be in scope at any given time when you want to parse or write json.</p>
+
+<p>There are a few more convenience methods added on the <code>JValue</code> type that allow you to <code>camelize</code> or <code>underscore</code> keys, remove the nulls etc.
+I spoke with <a href="https://github.com/jonifreeman">Joni Freeman</a> about the general idea of this library and he showed me what he did on a branch for lift-json 3.0 so I incorporated his work into json4s too. it basically means that a key/value pair used to represent a <code>JObject</code> is no longer a valid json AST node and there are some extra methods to work with those fields. All of this is explained in the <a href="https://github.com/json4s/json4s/blob/master/README.md">README</a> of the json4s project.</p>
+
+<p>I&rsquo;ve also added support for json4s to the <a href="https://github.com/dispatch/reboot">dispatch reboot</a> project so you can use it there just like you can with lift-json. Furthermore <a href="https://github.com/rktoomey">Rose Toomey</a> let me know that <a href="https://github.com/novus/salat">salat</a> is now using json4s as json library instead of lift-json.</p>
+
+<p>Some of the improvements I still want to make is for scala 2.10 I want to use the <code>Mirror</code> api to be able to reflect over more stuff than just case classes. For some of the use cases we have at where I work it makes sense to be able to use a few annotations (yes annotations unfortunately) to have certain keys be ignored and so on.  I&rsquo;ll probably steal some of that from the Salat project so that there is still some degree of consistency between our libraries.</p>
+
+<p>I also want to figure out how we can possibly make the AST based approach useful with huge data structures, as it&rsquo;s not inconceivable to want to send 100MB or 10GB json docs over the wire. At that moment a lazy approach actually makes a lot of sense, I&rsquo;m open to suggestions on how this could be achieved efficiently without breaking the AST model.</p>
+
+<p>So if you&rsquo;re using json in scala consider using or contributing to the <a href="https://github.com/json4s/json4s">json4s project</a>.</p>
+
+  <div id="disqus_thread"></div>
+</div>
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    
+    <script type="text/javascript">
+    var disqus_shortname = "casualjimblog";
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>
+    
+
+    
+    <script>
+      var _gaq=[['_setAccount','UA-240612-9'],['_trackPageview']];
+      (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+      g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g,s)}(document,'script'));
+    </script>
+    
+  <script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
+</html>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+    var disqus_shortname = 'casualjimblog';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+

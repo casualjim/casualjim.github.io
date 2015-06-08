@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Exploring technology one step at a time </title>
+    <link>http://localhost:1313/categories/sbt/</link>
+    <language>en-us</language>
+    <author></author>
+    <rights>(C) 2015</rights>
+    <updated>2012-09-08 09:14:43 &#43;0000 UTC</updated>
+
+    
+      
+        <item>
+          <title>Typeclass based databinding for scalatra</title>
+          <link>http://localhost:1313/blog/2012/09/08/typeclass-based-databinding-for-scalatra/</link>
+          <pubDate>Sat, 08 Sep 2012 09:14:43 UTC</pubDate>
+          <author></author>
+          <guid>http://localhost:1313/blog/2012/09/08/typeclass-based-databinding-for-scalatra/</guid>
+          <description>
+
+&lt;h2 id=&#34;typeclass-based-databinding-for-scalatra:4539167a8dda5ed46083cd1c7756f269&#34;&gt;Typeclass based databinding for scalatra&lt;/h2&gt;
+
+&lt;p&gt;One of the big new features for scalatra in the next release will be databinding. We chose to use a command approach which includes validation.
+It is built on top of &lt;a href=&#34;https://github.com/scalaz/scalaz&#34;&gt;scalaz 6.0.4&lt;/a&gt; at the moment, as soon as scalaz7 is released we&amp;rsquo;ll probably migrate to that.&lt;/p&gt;
+
+&lt;p&gt;One of the tenets of scalatra is that it&amp;rsquo;s a mutable interface, the request and response of servlets are both mutable classes and we depend on those. I also wanted for the commands to be defined with vals that you can address later.
+The core functionality of the bindings is actually immutable but to the consumer of the library it pretends to be a mutable interface. Perhaps those properties will make people frown, perhaps not.&lt;/p&gt;
+
+&lt;h3 id=&#34;what-does-it-do:4539167a8dda5ed46083cd1c7756f269&#34;&gt;What does it do?&lt;/h3&gt;
+
+&lt;p&gt;It provides a way to represent input forms with validation attached to the fields, maybe a code sample will be a better explanation.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import org.json4s._
+import org.json4s.jackson._
+import org.scalatra.databinding._
+
+class LoginForm extends JacksonCommand {
+  val login: Field[String] = asString(&amp;quot;login&amp;quot;).notBlank
+  val password: Field[String] = asString(&amp;quot;password&amp;quot;).notBlank
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This interface relies on a bunch of implicit conversions to be in scope. To be able to present this mutable interface it is needed to use the &lt;code&gt;Field[T]&lt;/code&gt; label after the val declaration otherwise things won&amp;rsquo;t work as you&amp;rsquo;d expect them to work.&lt;/p&gt;
+
+&lt;p&gt;Then in the scalatra application you can do&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import scalaz._
+import Scalaz._
+
+class LoginApp extends ScalatraServlet with JacksonJsonSupport with JacksonParsing {
+  post(&amp;quot;/login&amp;quot;) {
+    val cmd = command[LoginCommand]
+    if (cmd.isValid) {
+      users.login(~cmd.login.value, ~cmd.password.value)
+    } else {
+      halt(401, &amp;quot;invalid username/password&amp;quot;)
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will work with data provided as form params in a http post, as json or as xml. Of course the example above is a simple one and there are many other propeties you can interrogate. At this moment the databinding is a bit light on documentation as in there is none. If you&amp;rsquo;d like to take it for a spin feel free to ping us in the #scalatra irc room.&lt;/p&gt;
+
+&lt;h3 id=&#34;what-s-next:4539167a8dda5ed46083cd1c7756f269&#34;&gt;What&amp;rsquo;s next?&lt;/h3&gt;
+
+&lt;p&gt;At some point in the future I&amp;rsquo;d like turn a command into a monoid so that we have a map method on it, but for now I need to move onto another part of scalatra.&lt;/p&gt;
+</description>
+        </item>
+      
+    
+      
+        <item>
+          <title>searchable sbt wiki</title>
+          <link>http://localhost:1313/blog/2012/04/24/searchable-sbt-wiki/</link>
+          <pubDate>Tue, 24 Apr 2012 23:46:04 UTC</pubDate>
+          <author></author>
+          <guid>http://localhost:1313/blog/2012/04/24/searchable-sbt-wiki/</guid>
+          <description>
+
+&lt;h2 id=&#34;searchable-sbt-wiki-published:d6df3fe7278b1edf8c7720c78de18bfe&#34;&gt;Searchable sbt wiki published&lt;/h2&gt;
+
+&lt;p&gt;Last week I went to &lt;a href=&#34;http://days2012.scala-lang.org/&#34;&gt;Scala Days&lt;/a&gt; and had a blast. I got to meet many of the people whose software I use every day.&lt;br /&gt;
+Most Scala developers I know of use sbt to build scala projects.
+SBT has a great &lt;a href=&#34;https://github.com/harrah/xsbt/wiki&#34;&gt;wiki&lt;/a&gt; with loads of information but is hosted on github and they, unfortunately, have no search box on their wikis that will search just the wiki.  This leads to long searches on the sbt wiki or grepping the checked out git repo or worse.
+However the &lt;a href=&#34;https://github.com/github/gollum&#34;&gt;gollum&lt;/a&gt; software which runs the github wikis does have a search box, so I decided to host the sbt wiki as a read-only version somewhere else.&lt;/p&gt;
+
+&lt;p&gt;The same server that hosts our jenkins frontend is now also hosting the &lt;a href=&#34;https://sbtwiki.backchat.io&#34;&gt;sbt wiki&lt;/a&gt; and the main feature is &lt;em&gt;a search box&lt;/em&gt;. It&amp;rsquo;s running a unicorn server for rack fronted by nginx for ssl termination.&lt;/p&gt;
+
+&lt;p&gt;Enjoy the new &lt;a href=&#34;https://sbtwiki.backchat.io&#34;&gt;sbt wiki&lt;/a&gt;.&lt;/p&gt;
+</description>
+        </item>
+      
+    
+
+  </channel>
+</rss>

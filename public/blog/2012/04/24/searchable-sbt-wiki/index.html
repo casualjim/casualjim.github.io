@@ -10,7 +10,7 @@
 
   <title>
     
-      Projects &middot; casualjim&#39;s blog
+      searchable sbt wiki &middot; casualjim&#39;s blog
     
   </title>
 
@@ -65,7 +65,7 @@
       
     
       
-        <a class="sidebar-nav-item  active " href="http://localhost:1313/projects/">Projects</a>
+        <a class="sidebar-nav-item " href="http://localhost:1313/projects/">Projects</a>
       
     
 
@@ -93,37 +93,24 @@
       <div class="container content">
 
 
-<div class="page">
-  <h1 class="page-title">Projects</h1>
+<div class="post">
+  <h1 class="post-title">searchable sbt wiki</h1>
+  <span class="post-date">Apr 24 2012</span>
   
 
-<p>These are some projects I&rsquo;ve owned or still own in the open source world.</p>
+<h2 id="searchable-sbt-wiki-published:d6df3fe7278b1edf8c7720c78de18bfe">Searchable sbt wiki published</h2>
 
-<h2 id="go:3c42bb4157bf51d85ae7ffc4e1685909">Go</h2>
+<p>Last week I went to <a href="http://days2012.scala-lang.org/">Scala Days</a> and had a blast. I got to meet many of the people whose software I use every day.<br />
+Most Scala developers I know of use sbt to build scala projects.
+SBT has a great <a href="https://github.com/harrah/xsbt/wiki">wiki</a> with loads of information but is hosted on github and they, unfortunately, have no search box on their wikis that will search just the wiki.  This leads to long searches on the sbt wiki or grepping the checked out git repo or worse.
+However the <a href="https://github.com/github/gollum">gollum</a> software which runs the github wikis does have a search box, so I decided to host the sbt wiki as a read-only version somewhere else.</p>
 
-<ul>
-<li>Swagger 2.0: A toolkit for working with swagger 2.0 <a href="https://github.com/casualjim/go-swagger">github</a></li>
-</ul>
+<p>The same server that hosts our jenkins frontend is now also hosting the <a href="https://sbtwiki.backchat.io">sbt wiki</a> and the main feature is <em>a search box</em>. It&rsquo;s running a unicorn server for rack fronted by nginx for ssl termination.</p>
 
-<h2 id="scala:3c42bb4157bf51d85ae7ffc4e1685909">Scala</h2>
+<p>Enjoy the new <a href="https://sbtwiki.backchat.io">sbt wiki</a>.</p>
 
-<ul>
-<li>Scalatra ( <a href="http://scalatra.org">website</a> | <a href="https://github.com/scalatra/scalatra">source</a> )</li>
-<li>JSON4S ( <a href="http://json4s.org">website</a> | <a href="https://github.com/json4s/json4s">source</a> )</li>
-</ul>
-
-<h2 id="ruby-net:3c42bb4157bf51d85ae7ffc4e1685909">Ruby / .NET</h2>
-
-<ul>
-<li>IronNails: An MVC Framework for IronRuby to develop WPF/Silverlight applications ( <a href="http://flanders.co.nz/2008/08/07/ironnails-introduction/">blog</a> - <a href="http://github.com/casualjim/ironnails/tree/master">github</a> )</li>
-<li>Dynamic Script Control: A control that allows you to inject DLR based WPF controls in the xaml tree. ( <a href="http://flanders.co.nz/2008/06/12/dynamic-script-control/">blog</a> - <a href="http://www.codeplex.com/dynamicscriptcontrol">codeplex</a> - <a href="http://code.google.com/p/dynamic-script-control/">googlecode</a> )</li>
-<li>IronRuby-DBI: A DBI integration layer for IronRuby and ADO.NET  ( blog - <a href="http://code.google.com/p/ironruby-dbi/">googlecode</a> )</li>
-<li>IronRuby MVC: An ASP.NET MVC integration for IronRuby (<a href="http://www.asp.net/mvc/">website</a> - <a href="http://github.com/jschementi/ironrubymvc">github official</a> - <a href="http://github.com/casualjim/ironrubymvc">github my fork</a> )</li>
-<li>Caricature: A mocking/isolation gem for IronRuby (<a href="http://flanders.co.nz/2009/05/21/getting-started-with-caricature-and-ironruby/">blog </a>- <a href="http://github.com/casualjim/caricature">github</a>)</li>
-</ul>
-
+  <div id="disqus_thread"></div>
 </div>
-
       </div>
     </div>
 
@@ -154,4 +141,16 @@
 		+ ':1313/livereload.js?mindelay=10"></'
         + 'script>')</script></body>
 </html>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+    var disqus_shortname = 'casualjimblog';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
