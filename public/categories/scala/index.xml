@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Exploring technology one step at a time </title>
-    <link>http://localhost:1313/categories/scala/</link>
+    <link>http://casualjim.github.io/categories/scala/</link>
     <language>en-us</language>
     <author></author>
     <rights>(C) 2015</rights>
@@ -12,10 +12,10 @@
       
         <item>
           <title>Typeclass based databinding for scalatra</title>
-          <link>http://localhost:1313/blog/2012/09/08/typeclass-based-databinding-for-scalatra/</link>
+          <link>http://casualjim.github.io/blog/2012/09/08/typeclass-based-databinding-for-scalatra/</link>
           <pubDate>Sat, 08 Sep 2012 09:14:43 UTC</pubDate>
           <author></author>
-          <guid>http://localhost:1313/blog/2012/09/08/typeclass-based-databinding-for-scalatra/</guid>
+          <guid>http://casualjim.github.io/blog/2012/09/08/typeclass-based-databinding-for-scalatra/</guid>
           <description>
 
 &lt;h2 id=&#34;typeclass-based-databinding-for-scalatra:4539167a8dda5ed46083cd1c7756f269&#34;&gt;Typeclass based databinding for scalatra&lt;/h2&gt;
@@ -71,10 +71,10 @@ class LoginApp extends ScalatraServlet with JacksonJsonSupport with JacksonParsi
       
         <item>
           <title>searchable sbt wiki</title>
-          <link>http://localhost:1313/blog/2012/04/24/searchable-sbt-wiki/</link>
+          <link>http://casualjim.github.io/blog/2012/04/24/searchable-sbt-wiki/</link>
           <pubDate>Tue, 24 Apr 2012 23:46:04 UTC</pubDate>
           <author></author>
-          <guid>http://localhost:1313/blog/2012/04/24/searchable-sbt-wiki/</guid>
+          <guid>http://casualjim.github.io/blog/2012/04/24/searchable-sbt-wiki/</guid>
           <description>
 
 &lt;h2 id=&#34;searchable-sbt-wiki-published:d6df3fe7278b1edf8c7720c78de18bfe&#34;&gt;Searchable sbt wiki published&lt;/h2&gt;

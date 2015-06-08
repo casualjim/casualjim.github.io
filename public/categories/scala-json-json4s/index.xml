@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Exploring technology one step at a time </title>
-    <link>http://localhost:1313/categories/scala-json-json4s/</link>
+    <link>http://casualjim.github.io/categories/scala-json-json4s/</link>
     <language>en-us</language>
     <author></author>
     <rights>(C) 2015</rights>
@@ -12,10 +12,10 @@
       
         <item>
           <title>Json4s: One AST to rule them all.</title>
-          <link>http://localhost:1313/blog/2012/10/25/json4s-one-ast-to-rule-them-all./</link>
+          <link>http://casualjim.github.io/blog/2012/10/25/json4s-one-ast-to-rule-them-all./</link>
           <pubDate>Thu, 25 Oct 2012 08:48:23 UTC</pubDate>
           <author></author>
-          <guid>http://localhost:1313/blog/2012/10/25/json4s-one-ast-to-rule-them-all./</guid>
+          <guid>http://casualjim.github.io/blog/2012/10/25/json4s-one-ast-to-rule-them-all./</guid>
           <description>&lt;p&gt;It seems to me that every webframework in Scala, of which we have plenty, also insists on writing their own JSON library.
 But various tools rely on the AST from lift-json.  This is both good and bad, there were a number of gaps in the lift-json version.
 The most notable being that it does not support any other type than Double for representing decimal numbers.

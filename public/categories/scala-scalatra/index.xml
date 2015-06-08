@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Exploring technology one step at a time </title>
-    <link>http://localhost:1313/categories/scala-scalatra/</link>
+    <link>http://casualjim.github.io/categories/scala-scalatra/</link>
     <language>en-us</language>
     <author></author>
     <rights>(C) 2015</rights>
@@ -12,10 +12,10 @@
       
         <item>
           <title>Scalatra 2.2 released</title>
-          <link>http://localhost:1313/blog/2013/02/13/scalatra-2.2-released/</link>
+          <link>http://casualjim.github.io/blog/2013/02/13/scalatra-2.2-released/</link>
           <pubDate>Wed, 13 Feb 2013 11:30:15 UTC</pubDate>
           <author></author>
-          <guid>http://localhost:1313/blog/2013/02/13/scalatra-2.2-released/</guid>
+          <guid>http://casualjim.github.io/blog/2013/02/13/scalatra-2.2-released/</guid>
           <description>
 
 &lt;p&gt;Last week we released Scalatra 2.2. This is our biggest release so far and introduces a bunch of exciting features like commands for handling input, atmosphere for websockets and comet. It has a much deeper swagger integration now and that API has been completely upgraded.
